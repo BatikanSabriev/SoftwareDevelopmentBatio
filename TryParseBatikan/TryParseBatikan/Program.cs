@@ -1,54 +1,142 @@
-﻿namespace TryParseBatikan
+﻿using System.Reflection;
+using System.Threading.Tasks;
+
+namespace TryParseBatikan
 {
     internal class Program
     {
+  
+        static ToDoService service = new ToDoService();
         static void Main(string[] args)
         {
-            Console.WriteLine("=== РЕГИСТРАЦИЯ НА УЧЕНИК===");
-
-            Console.Write("Въведете име:");
-            string name = Console.ReadLine();
-
-
-            int age;
-
             while (true)
             {
-                Console.Write("Възраст:");
+                Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("======= TODO MANAGER ========");
+                Console.WriteLine("1. Добави задача");
+                Console.WriteLine("2. Покажи задачи");
+                Console.WriteLine("3. Маркирай задача като изпълнена");
+                Console.WriteLine("4. Изтрий задача");
+                Console.WriteLine("x. Изход");
 
-                if (int.TryParse(Console.ReadLine(), out age))
+                Console.WriteLine();
+                Console.Write("Избор: ");
+                string choice = Console.ReadLine();
+                try
                 {
-                    break;
+                    switch (choice)
+                    {
+                        case "1": { AddTodo(); break; }
+                        case "2": { ListAllTodos(); break; }
+                        case "3": { CompleteTodo(); break; }
+                        case "4": { DeleteTodo(); break; }
+                        case "x": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
+                        default: { Console.WriteLine("Невалиден избор."); break; }
+                    }
                 }
-
-                Console.WriteLine("\nНевалидна възраст. Въведете цяло число.");
-            }
-
-            byte grade;
-
-            while (true)
-            {
-                Console.Write("Клас:");
-
-                if (byte.TryParse(Console.ReadLine(), out grade))
+                catch (ArgumentOutOfRangeException ex)
                 {
-                    break;
+                    Console.WriteLine(ex.Message);
                 }
-                Console.WriteLine("\nГрешен клас");
-            }
-
-            double score;
-
-            while (true)
-            {
-                Console.Write("Оценка");
-
-                if (double.TryParse(Console.ReadLine(), out score))
+                catch (InvalidOperationException ex)
                 {
-                    break;
+                    Console.WriteLine(ex.Message);
+
                 }
-                Console.WriteLine("\nГрешна оценка");
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                Console.ReadLine();
             }
         }
+
+        private static void DeleteTodo()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("=====  Изтрий задача =======\n");
+            ListAllTodos();
+
+            Console.Write("Избери Id: ");
+            int id;
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Console.WriteLine("Невалидно id.");
+                Console.Write("Избери Id: ");
+            }
+            service.Delete(id);
+
+            Console.WriteLine("Задачата е изтрита.");
+
+        }
+
+        private static void CompleteTodo()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("=====  Маркирай задача като завършена =======\n");
+            ListAllTodos();
+
+            Console.Write("Избери Id: ");
+            int id;
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Console.WriteLine("Невалидно id.");
+                Console.Write("Избери Id: ");
+            }
+            service.Complete(id);
+          
+            Console.WriteLine("Задачата е завършена.");
+
+
+        }
+
+        private static void ListAllTodos()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("===== Всички задачи  =======");
+
+            var tasks = service.GetAll();
+            if (tasks.Count == 0)
+            {
+                Console.WriteLine("Няма въведени задачи");
+            }
+            else
+            {
+                foreach (ToDoItem todoItem in tasks)
+                {
+                    Console.WriteLine($"{todoItem}");
+                }
+            }
+        }
+
+        
+
+        private static void AddTodo()
+        {
+            Console.Clear();
+            Console.WriteLine();
+            Console.WriteLine("=====  Добавяне на задача =======");
+
+            Console.Write("Заглавие:");
+            string title = Console.ReadLine();
+
+            Console.Write("Описание:");
+            string description = Console.ReadLine();
+
+            Console.Write("Краен срок:");
+            DateTime dueDate;
+            while (!DateTime.TryParse(Console.ReadLine(), out dueDate))
+            {
+                Console.WriteLine("Невалидна дата.Въведи отово!");
+                Console.Write("Краен срок: ");
+            }
+            service.Add(title, description, dueDate);
+            Console.WriteLine("Задачата е добавена.");
+        }
+
     }
 }
