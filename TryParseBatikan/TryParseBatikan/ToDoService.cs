@@ -9,17 +9,24 @@ namespace TryParseBatikan
 {
     internal class ToDoService
     {
-        private readonly static List<ToDoItem> tasks = new List<ToDoItem>();
-        private static int nextId = 1;
+        //private readonly static List<ToDoItem> tasks = new List<ToDoItem>();
+        //private static int nextId = 1; //tiq moje i da go istriem no gi zakomentirah 
 
-        public List<ToDoItem> GetAll()
+        private readonly ToDoStorage storage;
+
+        public ToDoService(ToDoStorage storage)
         {
-            return tasks;
+            this.storage = storage;
+        }
+
+        public IReadOnlyList<ToDoItem> GetAll()
+        {
+            return storage.Todos;
         }
         public ToDoItem FindById(int id)
         {
             ToDoItem targetTodo = null;
-            foreach (ToDoItem todoItem in tasks)
+            foreach (ToDoItem todoItem in storage.Todos)
             {
                 if (todoItem.Id == id)
                 {
@@ -33,9 +40,9 @@ namespace TryParseBatikan
 
         public void Add(string title, string description, DateTime dueTime)
         {
-            ToDoItem todoItem = new ToDoItem(nextId, title, description, dueTime);
-            tasks.Add(todoItem);
-            nextId++; 
+            ToDoItem todoItem = new ToDoItem(storage.NextId, title, description, dueTime);
+            storage.Todos.Add(todoItem);
+            storage.NextId++; 
         }
 
         public void Complete(int id)
@@ -54,10 +61,10 @@ namespace TryParseBatikan
              ToDoItem deleteTask = FindById(id);
             if (deleteTask == null)
                 throw new ArgumentException("Няма такава задаа с такова ID ");
-             tasks.Remove(deleteTask);
+             storage.Todos.Remove(deleteTask);
         }
 
-
+      
 
 
     }

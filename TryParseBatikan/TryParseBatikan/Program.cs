@@ -6,31 +6,23 @@ namespace TryParseBatikan
     internal class Program
     {
   
-        static ToDoService service = new ToDoService();
+        //static ToDoService service = new ToDoService();
         static void Main(string[] args)
         {
+            ToDoStorage storage = new ToDoStorage();
+            ToDoService service = new ToDoService(storage);
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine();
-                Console.WriteLine("======= TODO MANAGER ========");
-                Console.WriteLine("1. Добави задача");
-                Console.WriteLine("2. Покажи задачи");
-                Console.WriteLine("3. Маркирай задача като изпълнена");
-                Console.WriteLine("4. Изтрий задача");
-                Console.WriteLine("x. Изход");
-
-                Console.WriteLine();
-                Console.Write("Избор: ");
+               
                 string choice = Console.ReadLine();
                 try
                 {
                     switch (choice)
                     {
-                        case "1": { AddTodo(); break; }
-                        case "2": { ListAllTodos(); break; }
-                        case "3": { CompleteTodo(); break; }
-                        case "4": { DeleteTodo(); break; }
+                        case "1": { AddTodo(service); break; }
+                        case "2": { ListAllTodos(service); break; }
+                        case "3": { CompleteTodo(service); break; }
+                        case "4": { DeleteTodo(service); break; }
                         case "x": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
                         default: { Console.WriteLine("Невалиден избор."); break; }
                     }
@@ -51,13 +43,15 @@ namespace TryParseBatikan
                 Console.ReadLine();
             }
         }
+       
 
-        private static void DeleteTodo()
+
+        private static void DeleteTodo(ToDoService service)
         {
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("=====  Изтрий задача =======\n");
-            ListAllTodos();
+            ListAllTodos(service);
 
             Console.Write("Избери Id: ");
             int id;
@@ -72,12 +66,12 @@ namespace TryParseBatikan
 
         }
 
-        private static void CompleteTodo()
+        private static void CompleteTodo(ToDoService service)
         {
             Console.Clear();
             Console.WriteLine();
             Console.WriteLine("=====  Маркирай задача като завършена =======\n");
-            ListAllTodos();
+            ListAllTodos(service);
 
             Console.Write("Избери Id: ");
             int id;
@@ -93,7 +87,7 @@ namespace TryParseBatikan
 
         }
 
-        private static void ListAllTodos()
+        private static void ListAllTodos(ToDoService service)
         {
             Console.Clear();
             Console.WriteLine();
@@ -115,7 +109,7 @@ namespace TryParseBatikan
 
         
 
-        private static void AddTodo()
+        private static void AddTodo(ToDoService service)
         {
             Console.Clear();
             Console.WriteLine();
@@ -136,6 +130,21 @@ namespace TryParseBatikan
             }
             service.Add(title, description, dueDate);
             Console.WriteLine("Задачата е добавена.");
+        }
+
+        static void Menu()
+        {
+             Console.Clear();
+                Console.WriteLine();
+                Console.WriteLine("======= TODO MANAGER ========");
+                Console.WriteLine("1. Добави задача");
+                Console.WriteLine("2. Покажи задачи");
+                Console.WriteLine("3. Маркирай задача като изпълнена");
+                Console.WriteLine("4. Изтрий задача");
+                Console.WriteLine("x. Изход");
+
+                Console.WriteLine();
+                Console.Write("Избор: ");
         }
 
     }
