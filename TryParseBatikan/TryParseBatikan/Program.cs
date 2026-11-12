@@ -25,7 +25,7 @@ namespace TryParseBatikan
                         case "2": { ListAllTodos(service); break; }
                         case "3": { CompleteTodo(service); break; }
                         case "4": { DeleteTodo(service); break; }
-                        case "5": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
+                        case "x": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
                         default: { Console.WriteLine("Невалиден избор."); break; }
                     }
                 }

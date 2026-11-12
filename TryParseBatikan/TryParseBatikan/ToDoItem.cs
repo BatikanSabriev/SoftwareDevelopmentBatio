@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace TryParseBatikan
 {
@@ -11,7 +12,7 @@ namespace TryParseBatikan
         private string title;
         public DateTime dueDate;
         private bool isCompleted;
-
+        [JsonInclude]
         public int Id { get; private set; }
         public string Title
         {
@@ -42,6 +43,7 @@ namespace TryParseBatikan
                 dueDate = value;
             }
         }
+        [JsonInclude]
         public bool IsCompleted
         {
             get
@@ -53,6 +55,8 @@ namespace TryParseBatikan
                 isCompleted = value;
             }
         }
+
+        public ToDoItem() { }
 
         public ToDoItem(int id, string title, string description, DateTime dueDate)
         {
@@ -67,6 +71,7 @@ namespace TryParseBatikan
 
         }
 
+        
         public void Completed()
         {
             if (IsCompleted)
