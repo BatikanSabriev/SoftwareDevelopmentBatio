@@ -7,11 +7,11 @@ using System.Text.Json;
 
 namespace TryParseBatikan
 {
-    internal class Storage
+    internal class FileStorage
     {
         private readonly string path;
 
-        public Storage(string path)
+        public FileStorage(string path)
         {
             this.path = path;
         }

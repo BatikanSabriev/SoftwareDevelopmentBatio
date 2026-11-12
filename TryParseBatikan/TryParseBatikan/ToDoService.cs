@@ -13,10 +13,12 @@ namespace TryParseBatikan
         //private static int nextId = 1; //tiq moje i da go istriem no gi zakomentirah 
 
         private readonly ToDoStorage storage;
+        private readonly FileStorage fileStorage;
 
-        public ToDoService(ToDoStorage storage)
+        public ToDoService(FileStorage file)
         {
-            this.storage = storage;
+            fileStorage = file;
+            this.storage = fileStorage.Load();
         }
 
         public IReadOnlyList<ToDoItem> GetAll()
@@ -42,7 +44,9 @@ namespace TryParseBatikan
         {
             ToDoItem todoItem = new ToDoItem(storage.NextId, title, description, dueTime);
             storage.Todos.Add(todoItem);
-            storage.NextId++; 
+            storage.NextId++;
+
+            fileStorage.Save(storage);
         }
 
         public void Complete(int id)
@@ -53,6 +57,8 @@ namespace TryParseBatikan
 
             completedTask.Completed();
 
+            fileStorage.Save(storage);
+
         }
 
 
@@ -61,11 +67,9 @@ namespace TryParseBatikan
              ToDoItem deleteTask = FindById(id);
             if (deleteTask == null)
                 throw new ArgumentException("Няма такава задаа с такова ID ");
+
              storage.Todos.Remove(deleteTask);
+             fileStorage.Save(storage);
         }
-
-      
-
-
     }
 }

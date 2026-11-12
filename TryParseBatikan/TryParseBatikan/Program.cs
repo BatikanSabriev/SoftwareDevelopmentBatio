@@ -9,10 +9,12 @@ namespace TryParseBatikan
         //static ToDoService service = new ToDoService();
         static void Main(string[] args)
         {
-            ToDoStorage storage = new ToDoStorage();
-            ToDoService service = new ToDoService(storage);
+           // ToDoStorage storage = new ToDoStorage();
+            FileStorage fileStorage = new FileStorage("todos.json");
+            ToDoService service = new ToDoService(fileStorage);
             while (true)
             {
+                Menu();
                
                 string choice = Console.ReadLine();
                 try
@@ -23,7 +25,7 @@ namespace TryParseBatikan
                         case "2": { ListAllTodos(service); break; }
                         case "3": { CompleteTodo(service); break; }
                         case "4": { DeleteTodo(service); break; }
-                        case "x": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
+                        case "5": { Console.WriteLine("Край на програмата"); Console.ReadLine(); return; }
                         default: { Console.WriteLine("Невалиден избор."); break; }
                     }
                 }
